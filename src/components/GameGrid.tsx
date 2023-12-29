@@ -20,12 +20,12 @@ const GameGrid = () => {
       >
         {loading &&
           skeletons.map((skeleton) => (
-            <CardGameContainer n key={skeleton}>
+            <CardGameContainer key={skeleton}>
               <GameCardSkeleton key={skeleton} />
             </CardGameContainer>
           ))}
         {games.map((game) => (
-          <CardGameContainer>
+          <CardGameContainer key={game.id}>
             <GameCard key={game.id} game={game} />
           </CardGameContainer>
         ))}
