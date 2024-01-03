@@ -53,6 +53,11 @@ interface FetchGamesResponse {
 // };
 
 const useGames = (gemeQuery: GameQuery | null) => useData<Game>("/games", [gemeQuery],
- {params:{ genres:  gemeQuery?.genre?.id, platforms: gemeQuery?.platform?.id, ordering: gemeQuery?.sortOrder}})
+ {params:{ 
+  genres:  gemeQuery?.genre?.id,
+  platforms: gemeQuery?.platform?.id,
+  ordering: gemeQuery?.sortOrder,
+  search: gemeQuery?.searchText,
+}})
 
 export default useGames;
