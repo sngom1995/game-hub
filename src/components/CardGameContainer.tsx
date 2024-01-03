@@ -5,7 +5,7 @@ interface Props {
   children: ReactNode;
 }
 
-const CardGameContainer = ({ children }) => {
+const CardGameContainer = ({ children }: Props) => {
   return (
     <Box borderRadius={10} overflow="hidden">
       {children}
