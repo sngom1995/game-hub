@@ -1,7 +1,9 @@
-import { CanceledError } from "./../../node_modules/axios/index.d";
+
 import { useEffect, useState } from "react";
 import apiClient from "../services/apiClient";
 import { CanceledError } from "axios";
+import useData from "./useData";
+import { Genre } from "./useGenres";
 
 export interface Platform {
   id: number;
@@ -24,29 +26,31 @@ interface FetchGamesResponse {
   results: Game[];
 }
 
-const useGames = () => {
-  const [games, setGames] = useState<Game[]>([]);
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+// const useGames = () => {
+//   const [games, setGames] = useState<Game[]>([]);
+//   const [error, setError] = useState("");
+//   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    const controller = new AbortController();
-    setLoading(true);
-    apiClient
-      .get<FetchGamesResponse>("/games", { signal: controller.signal })
-      .then((response) => {
-        setLoading(false);
-        setGames(response.data.results);
-      })
-      .catch((error) => {
-        if (error instanceof CanceledError) return;
-        setError(error.message);
-        setLoading(false);
-      });
+//   useEffect(() => {
+//     const controller = new AbortController();
+//     setLoading(true);
+//     apiClient
+//       .get<FetchGamesResponse>("/games", { signal: controller.signal })
+//       .then((response) => {
+//         setLoading(false);
+//         setGames(response.data.results);
+//       })
+//       .catch((error) => {
+//         if (error instanceof CanceledError) return;
+//         setError(error.message);
+//         setLoading(false);
+//       });
 
-    return () => controller.abort();
-  }, []);
-  return { error, games, loading };
-};
+//     return () => controller.abort();
+//   }, []);
+//   return { error, games, loading };
+// };
+
+const useGames = (selectedGenre: Genre | null) => useData<Game>("/games", [selectedGenre?.id], {params:{ genres:  selectedGenre?.id}})
 
 export default useGames;
