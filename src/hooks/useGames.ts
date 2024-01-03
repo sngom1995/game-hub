@@ -4,6 +4,7 @@ import apiClient from "../services/apiClient";
 import { CanceledError } from "axios";
 import useData from "./useData";
 import { Genre } from "./useGenres";
+import { GameQuery } from "../App";
 
 export interface Platform {
   id: number;
@@ -51,6 +52,7 @@ interface FetchGamesResponse {
 //   return { error, games, loading };
 // };
 
-const useGames = (selectedGenre: Genre | null, selectedPlatform: Platform | null) => useData<Game>("/games", [selectedGenre?.id, selectedPlatform?.id], {params:{ genres:  selectedGenre?.id, platforms: selectedPlatform?.id}})
+const useGames = (gemeQuery: GameQuery | null) => useData<Game>("/games", [gemeQuery],
+ {params:{ genres:  gemeQuery?.genre?.id, platforms: gemeQuery?.platform?.id}})
 
 export default useGames;
