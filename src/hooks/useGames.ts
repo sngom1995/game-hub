@@ -1,10 +1,9 @@
 
-import { useEffect, useState } from "react";
-import apiClient from "../services/apiClient";
-import { CanceledError } from "axios";
-import useData from "./useData";
-import { Genre } from "./useGenres";
+
+import apiClient, { FetchResponse } from "../services/apiClient";
+
 import { GameQuery } from "../App";
+import { useQuery } from "@tanstack/react-query";
 
 export interface Platform {
   id: number;
@@ -28,37 +27,19 @@ interface FetchGamesResponse {
   results: Game[];
 }
 
-// const useGames = () => {
-//   const [games, setGames] = useState<Game[]>([]);
-//   const [error, setError] = useState("");
-//   const [loading, setLoading] = useState(false);
 
-//   useEffect(() => {
-//     const controller = new AbortController();
-//     setLoading(true);
-//     apiClient
-//       .get<FetchGamesResponse>("/games", { signal: controller.signal })
-//       .then((response) => {
-//         setLoading(false);
-//         setGames(response.data.results);
-//       })
-//       .catch((error) => {
-//         if (error instanceof CanceledError) return;
-//         setError(error.message);
-//         setLoading(false);
-//       });
-
-//     return () => controller.abort();
-//   }, []);
-//   return { error, games, loading };
-// };
-
-const useGames = (gemeQuery: GameQuery | null) => useData<Game>("/games", [gemeQuery],
- {params:{ 
+const useGames = (gemeQuery: GameQuery | null) => useQuery<FetchResponse<Game>, Error>({
+  queryKey: ["games", gemeQuery],
+  queryFn: () => apiClient.get<FetchResponse<Game>>("/games", {params:{ 
   genres:  gemeQuery?.genre?.id,
-  platforms: gemeQuery?.platform?.id,
+  parent_platforms: gemeQuery?.platform?.id,
   ordering: gemeQuery?.sortOrder,
   search: gemeQuery?.searchText,
-}})
+}
+})
+  .then((res) => res.data),
+  staleTime: 24 * 60 * 60 * 1000, // 1 day
+}
+);
 
 export default useGames;
