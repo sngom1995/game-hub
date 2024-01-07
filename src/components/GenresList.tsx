@@ -1,7 +1,6 @@
 import React from "react";
 import useGenres from "../hooks/useGenres";
 
-import useData from "../hooks/useData";
 import { Genre } from "../hooks/useGenres";
 import imageCroppedUrl from "../services/image-url";
 import {
@@ -17,10 +16,10 @@ import {
 
 interface Props {
   onSelectGenre: (genre: Genre) => void;
-  selectedGenre: Genre | null;
+  selectedGenreId?: number;
 }
 
-const GenresList = ({ onSelectGenre, selectedGenre }: Props) => {
+const GenresList = ({ onSelectGenre, selectedGenreId }: Props) => {
   const { data, isLoading: loading, error } = useGenres();
   if (loading) return <Spinner />;
   return (
@@ -45,7 +44,7 @@ const GenresList = ({ onSelectGenre, selectedGenre }: Props) => {
                 onClick={() => onSelectGenre(genre)}
                 fontSize="lg"
                 variant="link"
-                fontWeight={genre.id === selectedGenre?.id ? "bold" : "normal"}
+                fontWeight={genre.id === selectedGenreId ? "bold" : "normal"}
               >
                 {genre.name}
               </Button>
