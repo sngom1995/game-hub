@@ -4,12 +4,9 @@ import apiClient, { FetchResponse } from "../services/apiClient";
 
 import { GameQuery } from "../App";
 import { useQuery } from "@tanstack/react-query";
+import { Platform } from "./usePlatform";
 
-export interface Platform {
-  id: number;
-  name: string;
-  slug: string;
-}
+
 
 export interface Game {
   id: number;
