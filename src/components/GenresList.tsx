@@ -13,14 +13,11 @@ import {
   Button,
   Heading,
 } from "@chakra-ui/react";
+import useGameQueryStore from "../store";
 
-interface Props {
-  onSelectGenre: (genre: Genre) => void;
-  selectedGenreId?: number;
-}
-
-const GenresList = ({ onSelectGenre, selectedGenreId }: Props) => {
+const GenresList = () => {
   const { data, isLoading: loading, error } = useGenres();
+  const { gameQuery, setGenreId: onSelectGenrre } = useGameQueryStore();
   if (loading) return <Spinner />;
   return (
     <>
@@ -41,10 +38,10 @@ const GenresList = ({ onSelectGenre, selectedGenreId }: Props) => {
               <Button
                 whiteSpace="normal"
                 textAlign="left"
-                onClick={() => onSelectGenre(genre)}
+                onClick={() => onSelectGenrre(genre.id)}
                 fontSize="lg"
                 variant="link"
-                fontWeight={genre.id === selectedGenreId ? "bold" : "normal"}
+                fontWeight={genre.id === gameQuery.genreId ? "bold" : "normal"}
               >
                 {genre.name}
               </Button>

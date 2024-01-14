@@ -1,9 +1,9 @@
 import ms from "ms";
 import APIClient, { FetchResponse } from "../services/apiClient";
 
-import { GameQuery } from "../App";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { Platform } from "./usePlatforms";
+import useGameQueryStore from "../store";
 
 const apiClient = new APIClient<Game>("/games");
 
@@ -16,16 +16,17 @@ export interface Game {
   rating_top: number;
 }
 
-const useGames = (gemeQuery: GameQuery | null) =>
-  useInfiniteQuery<FetchResponse<Game>, Error>({
-    queryKey: ["games", gemeQuery],
+const useGames = () => {
+  const gameQuery = useGameQueryStore((s) => s.gameQuery);
+  return useInfiniteQuery<FetchResponse<Game>, Error>({
+    queryKey: ["games", gameQuery],
     queryFn: ({ pageParam = 1 }) =>
       apiClient.getAll({
         params: {
-          genres: gemeQuery?.genreId,
-          parent_platforms: gemeQuery?.platformId,
-          ordering: gemeQuery?.sortOrder,
-          search: gemeQuery?.searchText,
+          genres: gameQuery?.genreId,
+          parent_platforms: gameQuery?.platformId,
+          ordering: gameQuery?.sortOrder,
+          search: gameQuery?.searchText,
           page: pageParam,
         },
       }),
@@ -34,5 +35,6 @@ const useGames = (gemeQuery: GameQuery | null) =>
       return lastPage.next ? allPages.length + 1 : undefined;
     },
   });
+};
 
 export default useGames;
